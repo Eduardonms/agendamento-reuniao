@@ -1,59 +1,166 @@
-# Frontend
+# Agendamento de Reunião — Full Stack
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.27.
+Sistema completo para cadastro de agendamentos de reunião:
 
-## Development server
+- **Backend:** Java 21 + Quarkus 3 (REST API, JWT, H2/MySQL)
+- **Frontend:** Angular 19
+- **Infra:** Docker Compose com MySQL
 
-To start a local development server, run:
+## Estrutura
 
-```bash
-ng serve
+```
+agendamento-reuniao-api/
+├── src/                 # Backend Quarkus
+├── frontend/            # Frontend Angular
+├── docker-compose.yml   # MySQL + API
+└── Dockerfile           # Build da API
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Pré-requisitos
 
-## Code scaffolding
+- Java 21
+- Node.js 18+
+- Docker (opcional, para MySQL/API em containers)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Backend (API)
 
-```bash
-ng generate component component-name
+### Desenvolvimento com H2
+
+```powershell
+.\mvnw.cmd quarkus:dev
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+API: `http://localhost:8080`  
+Swagger: `http://localhost:8080/swagger-ui`
 
-```bash
-ng generate --help
+### Autenticação JWT
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| POST | `/api/auth/register` | Cadastro de usuário |
+| POST | `/api/auth/login` | Login (retorna token JWT) |
+
+Rotas de agendamento exigem header:
+
+```
+Authorization: Bearer <token>
 ```
 
-## Building
+### Agendamentos
 
-To build the project run:
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/api/agendamentos` | Listar (filtros: `status`, `responsavel`, `inicio`, `fim`) |
+| GET | `/api/agendamentos/{id}` | Buscar por ID |
+| POST | `/api/agendamentos` | Criar |
+| PUT | `/api/agendamentos/{id}` | Atualizar |
+| DELETE | `/api/agendamentos/{id}` | Excluir |
 
-```bash
-ng build
+## Frontend (Angular)
+
+```powershell
+cd frontend
+npm install
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+App: `http://localhost:4200`
 
-## Running unit tests
+Fluxo:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+1. Cadastre-se em `/register` ou entre em `/login`
+2. Após login, gerencie agendamentos em `/agendamentos`
 
-```bash
-ng test
+## Docker Compose (MySQL + API)
+
+Subir apenas MySQL:
+
+```powershell
+docker compose up mysql -d
 ```
 
-## Running end-to-end tests
+Subir MySQL + API:
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+```powershell
+docker compose up --build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Variáveis usadas pela API no container:
 
-## Additional Resources
+- `DB_URL=jdbc:mysql://mysql:3306/agendamento_reuniao`
+- `DB_USERNAME=root`
+- `DB_PASSWORD=root`
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Executar tudo localmente
+
+Terminal 1 — API:
+
+```powershell
+.\mvnw.cmd quarkus:dev
+```
+
+Terminal 2 — Frontend:
+
+```powershell
+cd frontend
+npm start
+```
+
+## Testes backend
+
+```powershell
+.\mvnw.cmd test
+```
+
+## Build produção
+
+Backend:
+
+```powershell
+.\mvnw.cmd package -Dquarkus.profile=prod
+```
+
+Frontend:
+
+```powershell
+cd frontend
+npm run build
+```
+
+## Exemplo — login
+
+```json
+POST /api/auth/login
+{
+  "email": "usuario@email.com",
+  "senha": "senha123"
+}
+```
+
+Resposta:
+
+```json
+{
+  "token": "eyJ...",
+  "tipo": "Bearer",
+  "nome": "Usuario",
+  "email": "usuario@email.com"
+}
+```
+
+## Exemplo — agendamento
+
+```json
+POST /api/agendamentos
+Authorization: Bearer <token>
+{
+  "titulo": "Reunião de planejamento",
+  "descricao": "Alinhar sprint",
+  "responsavel": "Maria Silva",
+  "participantes": "João, Ana, Pedro",
+  "localReuniao": "Sala 3",
+  "dataHoraInicio": "2026-07-01T10:00:00",
+  "dataHoraFim": "2026-07-01T11:00:00",
+  "status": "AGENDADO"
+}
+```
