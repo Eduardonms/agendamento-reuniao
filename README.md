@@ -1,180 +1,59 @@
-# 🗓️ Agendamento de Reunião — Full Stack
+# Frontend
 
-Sistema completo e moderno para gerenciamento e cadastro de agendamentos de reuniões.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.27.
 
----
+## Development server
 
-## 🛠️ Tecnologias Utilizadas
-
-* **Backend:** Java 21 + Quarkus 3 (REST API, JWT, H2/MySQL)
-* **Frontend:** Angular 19
-* **Infraestrutura:** Docker Compose com MySQL
-
----
-
-## 📂 Estrutura do Projeto
-
-```text
-agendamento-reuniao-api/
-├── src/                    # Código-fonte do Backend Quarkus
-├── frontend/               # Código-fonte do Frontend Angular
-├── docker-compose.yml      # Configuração do MySQL + API
-└── Dockerfile              # Script de Build da API
-```
-
----
-
-## 📋 Pré-requisitos
-
-Antes de começar, você precisará ter instalado em sua máquina:
-* **Java 21**
-* **Node.js 18+**
-* **Docker** (opcional, para rodar o banco/API em containers)
-
----
-
-## 🚀 Como Executar o Projeto Localmente
-
-### ☕ Backend (API)
-
-**Desenvolvimento com Banco H2 (Em Memória):**
-```bash
-# Na raiz do projeto backend
-.\mvnw.cmd quarkus:dev
-```
-* **API local:** `http://localhost:8080`
-* **Swagger UI (Documentação):** `http://localhost:8080/swagger-ui`
-
-### 🅰️ Frontend (Angular)
+To start a local development server, run:
 
 ```bash
-# Acesse a pasta do frontend
-cd frontend
-
-# Instale as dependências
-npm install
-
-# Inicie o servidor de desenvolvimento
-npm start
+ng serve
 ```
-* **Aplicação web:** `http://localhost:4200`
 
-### 🐳 Rodando Tudo Juntos (Terminal Único)
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-| Terminal | Comando |
-| :--- | :--- |
-| **Terminal 1 — API** | `.\mvnw.cmd quarkus:dev` |
-| **Terminal 2 — Frontend** | `cd frontend && npm start` |
+## Code scaffolding
 
----
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-## 🐳 Ambiente Docker (MySQL + API)
-
-**Subir apenas o banco MySQL:**
 ```bash
-docker compose up mysql -d
+ng generate component component-name
 ```
 
-**Subir a aplicação completa (MySQL + API):**
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+
 ```bash
-docker compose up --build
+ng generate --help
 ```
 
-### 🔑 Variáveis de Ambiente da API no Container
-* `DB_URL=jdbc:mysql://mysql:3306/agendamento_reuniao`
-* `DB_USERNAME=root`
-* `DB_PASSWORD=root`
+## Building
 
----
+To build the project run:
 
-## 🔐 Autenticação JWT
-
-> **Nota:** As rotas de agendamento exigem o cabeçalho HTTP: `Authorization: Bearer <seu_token>`
-
-| Método | Rota | Descrição |
-| :--- | :--- | :--- |
-| `POST` | `/api/auth/register` | Cadastro de novo usuário |
-| `POST` | `/api/auth/login` | Login do usuário (retorna o token JWT) |
-
-### 🛠️ Exemplo de Fluxo
-1. Cadastre-se em `/register` ou faça login em `/login`.
-2. Após obter o token, gerencie seus agendamentos no endpoint correspondente.
-
----
-
-## 📅 Endpoints de Agendamentos
-
-| Método | Rota | Descrição |
-| :--- | :--- | :--- |
-| `GET` | `/api/agendamentos` | Listar agendamentos (Filtros: `status`, `responsavel`, `inicio`, `fim`) |
-| `GET` | `/api/agendamentos/{id}` | Buscar agendamento por ID |
-| `POST` | `/api/agendamentos` | Criar um novo agendamento |
-| `PUT` | `/api/agendamentos/{id}` | Atualizar um agendamento existente |
-| `DELETE` | `/api/agendamentos/{id}` | Excluir um agendamento |
-
----
-
-## 📝 Exemplos de Requisições e Respostas
-
-### 🔑 Realizando Login (`POST /api/auth/login`)
-
-**Request Body:**
-```json
-{
-  "email": "usuario@email.com",
-  "senha": "senha123"
-}
-```
-
-**Response Body:**
-```json
-{
-  "token": "eyJ...",
-  "tipo": "Bearer",
-  "nome": "Usuario",
-  "email": "usuario@email.com"
-}
-```
-
-### 🗓️ Criando um Agendamento (`POST /api/agendamentos`)
-
-**Headers:**
-```http
-Authorization: Bearer <seu_token_jwt_aqui>
-```
-
-**Request Body:**
-```json
-{
-  "titulo": "Reunião de planejamento",
-  "descricao": "Alinhar sprint",
-  "responsavel": "Maria Silva",
-  "participantes": "João, Ana, Pedro",
-  "localReuniao": "Sala 3",
-  "dataHoraInicio": "2026-07-01T10:00:00",
-  "dataHoraFim": "2026-07-01T11:00:00",
-  "status": "AGENDADO"
-}
-```
-
----
-
-## 🧪 Testes e Build de Produção
-
-### Rodar Testes do Backend
 ```bash
-.\mvnw.cmd test
+ng build
 ```
 
-### Compilar para Produção
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-**Backend:**
+## Running unit tests
+
+To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+
 ```bash
-.\mvnw.cmd package -Dquarkus.profile=prod
+ng test
 ```
 
-**Frontend:**
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
 ```bash
-cd frontend
-npm run build
+ng e2e
 ```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
