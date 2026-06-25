@@ -1,0 +1,16 @@
+<div class="app-shell">
+  <header class="topbar">
+    <a routerLink="/agendamentos" class="brand">Agendamento de Reuniões</a>
+
+    @if (authService.isAuthenticated()) {
+      <div class="user-area">
+        <span>Olá, {{ authService.user()?.nome }}</span>
+        <button type="button" class="secondary" (click)="authService.logout()">Sair</button>
+      </div>
+    }
+  </header>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>

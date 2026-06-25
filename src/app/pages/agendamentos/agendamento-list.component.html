@@ -1,0 +1,113 @@
+<section class="page-header">
+  <div>
+    <h1>Agendamentos</h1>
+    <p>Gerencie reuniões da equipe</p>
+  </div>
+  <button type="button" class="secondary" (click)="novo()">Novo agendamento</button>
+</section>
+
+@if (erro()) {
+  <div class="alert">{{ erro() }}</div>
+}
+
+<section class="panel">
+  <h2>{{ editandoId() ? 'Editar agendamento' : 'Novo agendamento' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="salvar()" class="form-grid">
+    <label>
+      Título
+      <input type="text" formControlName="titulo" />
+    </label>
+
+    <label>
+      Responsável
+      <input type="text" formControlName="responsavel" />
+    </label>
+
+    <label class="full">
+      Participantes
+      <input type="text" formControlName="participantes" placeholder="João, Ana, Pedro" />
+    </label>
+
+    <label>
+      Local
+      <input type="text" formControlName="localReuniao" />
+    </label>
+
+    <label>
+      Status
+      <select formControlName="status">
+        @for (status of statusOpcoes; track status) {
+          <option [value]="status">{{ status }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Início
+      <input type="datetime-local" formControlName="dataHoraInicio" />
+    </label>
+
+    <label>
+      Fim
+      <input type="datetime-local" formControlName="dataHoraFim" />
+    </label>
+
+    <label class="full">
+      Descrição
+      <textarea rows="3" formControlName="descricao"></textarea>
+    </label>
+
+    <div class="actions full">
+      <button type="submit" [disabled]="salvando()">
+        {{ salvando() ? 'Salvando...' : (editandoId() ? 'Atualizar' : 'Cadastrar') }}
+      </button>
+      @if (editandoId()) {
+        <button type="button" class="secondary" (click)="novo()">Cancelar edição</button>
+      }
+    </div>
+  </form>
+</section>
+
+<section class="panel">
+  <h2>Lista</h2>
+
+  @if (carregando()) {
+    <p>Carregando...</p>
+  } @else if (agendamentos().length === 0) {
+    <p class="empty">Nenhum agendamento cadastrado.</p>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Responsável</th>
+            <th>Início</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of agendamentos(); track item.id) {
+            <tr>
+              <td>
+                <strong>{{ item.titulo }}</strong>
+                @if (item.localReuniao) {
+                  <small>{{ item.localReuniao }}</small>
+                }
+              </td>
+              <td>{{ item.responsavel }}</td>
+              <td>{{ item.dataHoraInicio | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td><span class="badge">{{ item.status }}</span></td>
+              <td class="actions-cell">
+                <button type="button" class="link" (click)="editar(item)">Editar</button>
+                <button type="button" class="link danger" (click)="excluir(item.id!)">Excluir</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
