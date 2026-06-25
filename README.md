@@ -1,97 +1,150 @@
-#Agendamento de Reunião — Full Stack
-Sistema completo para cadastro de agendamentos de reunião:
+# 🗓️ Agendamento de Reunião — Full Stack
 
-##Backend: Java 21 + Quarkus 3 (REST API, JWT, H2/MySQL)
-Frontend: Angular 19
-Infra: Docker Compose com MySQL
-Estrutura
+Sistema completo e moderno para gerenciamento e cadastro de agendamentos de reuniões.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+* **Backend:** Java 21 + Quarkus 3 (REST API, JWT, H2/MySQL)
+* **Frontend:** Angular 19
+* **Infraestrutura:** Docker Compose com MySQL
+
+---
+
+## 📂 Estrutura do Projeto
+
+```text
 agendamento-reuniao-api/
-├── src/                 # Backend Quarkus
-├── frontend/            # Frontend Angular
-├── docker-compose.yml   # MySQL + API
-└── Dockerfile           # Build da API
-Pré-requisitos
-Java 21
-Node.js 18+
-Docker (opcional, para MySQL/API em containers)
-Backend (API)
-Desenvolvimento com H2
+├── src/                    # Código-fonte do Backend Quarkus
+├── frontend/               # Código-fonte do Frontend Angular
+├── docker-compose.yml      # Configuração do MySQL + API
+└── Dockerfile              # Script de Build da API
+```
+
+---
+
+## 📋 Pré-requisitos
+
+Antes de começar, você precisará ter instalado em sua máquina:
+* **Java 21**
+* **Node.js 18+**
+* **Docker** (opcional, para rodar o banco/API em containers)
+
+---
+
+## 🚀 Como Executar o Projeto Localmente
+
+### ☕ Backend (API)
+
+**Desenvolvimento com Banco H2 (Em Memória):**
+```bash
+# Na raiz do projeto backend
 .\mvnw.cmd quarkus:dev
-API: http://localhost:8080
-Swagger: http://localhost:8080/swagger-ui
+```
+* **API local:** `http://localhost:8080`
+* **Swagger UI (Documentação):** `http://localhost:8080/swagger-ui`
 
-##Autenticação JWT
-Método	Rota	Descrição
-POST	/api/auth/register	Cadastro de usuário
-POST	/api/auth/login	Login (retorna token JWT)
-Rotas de agendamento exigem header:
+### 🅰️ Frontend (Angular)
 
-Authorization: Bearer <token>
-Agendamentos
-Método	Rota	Descrição
-GET	/api/agendamentos	Listar (filtros: status, responsavel, inicio, fim)
-GET	/api/agendamentos/{id}	Buscar por ID
-POST	/api/agendamentos	Criar
-PUT	/api/agendamentos/{id}	Atualizar
-DELETE	/api/agendamentos/{id}	Excluir
-Frontend (Angular)
+```bash
+# Acesse a pasta do frontend
 cd frontend
+
+# Instale as dependências
 npm install
+
+# Inicie o servidor de desenvolvimento
 npm start
-App: http://localhost:4200
+```
+* **Aplicação web:** `http://localhost:4200`
 
-#Fluxo:
+### 🐳 Rodando Tudo Juntos (Terminal Único)
 
-Cadastre-se em /register ou entre em /login
-Após login, gerencie agendamentos em /agendamentos
-Docker Compose (MySQL + API)
-Subir apenas MySQL:
+| Terminal | Comando |
+| :--- | :--- |
+| **Terminal 1 — API** | `.\mvnw.cmd quarkus:dev` |
+| **Terminal 2 — Frontend** | `cd frontend && npm start` |
 
+---
+
+## 🐳 Ambiente Docker (MySQL + API)
+
+**Subir apenas o banco MySQL:**
+```bash
 docker compose up mysql -d
-Subir MySQL + API:
+```
 
+**Subir a aplicação completa (MySQL + API):**
+```bash
 docker compose up --build
-Variáveis usadas pela API no container:
+```
 
-DB_URL=jdbc:mysql://mysql:3306/agendamento_reuniao
-DB_USERNAME=root
-DB_PASSWORD=root
-Executar tudo localmente
-Terminal 1 — API:
+### 🔑 Variáveis de Ambiente da API no Container
+* `DB_URL=jdbc:mysql://mysql:3306/agendamento_reuniao`
+* `DB_USERNAME=root`
+* `DB_PASSWORD=root`
 
-.\mvnw.cmd quarkus:dev
-Terminal 2 — Frontend:
+---
 
-cd frontend
-npm start
-Testes backend
-.\mvnw.cmd test
-Build produção
-Backend:
+## 🔐 Autenticação JWT
 
-.\mvnw.cmd package -Dquarkus.profile=prod
+> **Nota:** As rotas de agendamento exigem o cabeçalho HTTP: `Authorization: Bearer <seu_token>`
 
-##Frontend:
+| Método | Rota | Descrição |
+| :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Cadastro de novo usuário |
+| `POST` | `/api/auth/login` | Login do usuário (retorna o token JWT) |
 
-cd frontend
-npm run build
-Exemplo — login
-POST /api/auth/login
+### 🛠️ Exemplo de Fluxo
+1. Cadastre-se em `/register` ou faça login em `/login`.
+2. Após obter o token, gerencie seus agendamentos no endpoint correspondente.
+
+---
+
+## 📅 Endpoints de Agendamentos
+
+| Método | Rota | Descrição |
+| :--- | :--- | :--- |
+| `GET` | `/api/agendamentos` | Listar agendamentos (Filtros: `status`, `responsavel`, `inicio`, `fim`) |
+| `GET` | `/api/agendamentos/{id}` | Buscar agendamento por ID |
+| `POST` | `/api/agendamentos` | Criar um novo agendamento |
+| `PUT` | `/api/agendamentos/{id}` | Atualizar um agendamento existente |
+| `DELETE` | `/api/agendamentos/{id}` | Excluir um agendamento |
+
+---
+
+## 📝 Exemplos de Requisições e Respostas
+
+### 🔑 Realizando Login (`POST /api/auth/login`)
+
+**Request Body:**
+```json
 {
   "email": "usuario@email.com",
   "senha": "senha123"
 }
-##Resposta:
+```
 
+**Response Body:**
+```json
 {
   "token": "eyJ...",
   "tipo": "Bearer",
   "nome": "Usuario",
   "email": "usuario@email.com"
 }
-##Exemplo — agendamento
-POST /api/agendamentos
-Authorization: Bearer <token>
+```
+
+### 🗓️ Criando um Agendamento (`POST /api/agendamentos`)
+
+**Headers:**
+```http
+Authorization: Bearer <seu_token_jwt_aqui>
+```
+
+**Request Body:**
+```json
 {
   "titulo": "Reunião de planejamento",
   "descricao": "Alinhar sprint",
@@ -102,3 +155,26 @@ Authorization: Bearer <token>
   "dataHoraFim": "2026-07-01T11:00:00",
   "status": "AGENDADO"
 }
+```
+
+---
+
+## 🧪 Testes e Build de Produção
+
+### Rodar Testes do Backend
+```bash
+.\mvnw.cmd test
+```
+
+### Compilar para Produção
+
+**Backend:**
+```bash
+.\mvnw.cmd package -Dquarkus.profile=prod
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm run build
+```
