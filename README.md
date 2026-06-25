@@ -1,7 +1,7 @@
-Agendamento de Reunião — Full Stack
+#Agendamento de Reunião — Full Stack
 Sistema completo para cadastro de agendamentos de reunião:
 
-Backend: Java 21 + Quarkus 3 (REST API, JWT, H2/MySQL)
+##Backend: Java 21 + Quarkus 3 (REST API, JWT, H2/MySQL)
 Frontend: Angular 19
 Infra: Docker Compose com MySQL
 Estrutura
@@ -20,7 +20,7 @@ Desenvolvimento com H2
 API: http://localhost:8080
 Swagger: http://localhost:8080/swagger-ui
 
-Autenticação JWT
+##Autenticação JWT
 Método	Rota	Descrição
 POST	/api/auth/register	Cadastro de usuário
 POST	/api/auth/login	Login (retorna token JWT)
@@ -40,7 +40,7 @@ npm install
 npm start
 App: http://localhost:4200
 
-Fluxo:
+#Fluxo:
 
 Cadastre-se em /register ou entre em /login
 Após login, gerencie agendamentos em /agendamentos
@@ -70,7 +70,8 @@ Build produção
 Backend:
 
 .\mvnw.cmd package -Dquarkus.profile=prod
-Frontend:
+
+##Frontend:
 
 cd frontend
 npm run build
@@ -80,7 +81,7 @@ POST /api/auth/login
   "email": "usuario@email.com",
   "senha": "senha123"
 }
-Resposta:
+##Resposta:
 
 {
   "token": "eyJ...",
@@ -88,7 +89,7 @@ Resposta:
   "nome": "Usuario",
   "email": "usuario@email.com"
 }
-Exemplo — agendamento
+##Exemplo — agendamento
 POST /api/agendamentos
 Authorization: Bearer <token>
 {
